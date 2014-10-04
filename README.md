@@ -1,6 +1,8 @@
 Open Source Software used in Pomdog
 -----------------------------------
 
+All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs to build or run.
+
 ### iutest - iris unit test framework
 
 * [SourceForge](http://iutest.sourceforge.jp/)
