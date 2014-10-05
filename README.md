@@ -24,7 +24,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |libpng||
 |---|---|
 |URL|http://libpng.org/|
-|Version|1.6.12|
+|Version|1.6.13|
 |License|libpng License|
 |License File|[third_party/libpng/LICENSE][license-libpng]|
 
