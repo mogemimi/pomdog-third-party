@@ -182,21 +182,12 @@ public:
 	*/
 	static iuFilePath ConcatPaths(const iuFilePath& directory, const iuFilePath& relative_path);
 
-public:
-	/**
-	 * @brief	パス区切り文字の取得
-	*/
-	static char GetPathSeparator(void) IUTEST_CXX_NOEXCEPT_SPEC;
-
 private:
 	/**
 	 * @biref	正規化
 	*/
 	void Normalize(void);
 
-private:
-	static bool IsPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC;
-	static bool IsAltPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC;
 private:
 	::std::string m_path;
 };

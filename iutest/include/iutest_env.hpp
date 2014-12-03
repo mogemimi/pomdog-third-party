@@ -93,9 +93,11 @@ inline ::std::string EnvironmentString(const char* name)
 class Environment
 {
 public:
-	virtual ~Environment(void)	{}
+	virtual ~Environment(void)	{ Release(); }
 	virtual void SetUp(void)	{}	//!< 事前処理
 	virtual void TearDown(void)	{}	//!< 事後処理
+private:
+	void Release(void);
 private:
 	struct should_be_SetUp {};
 	virtual should_be_SetUp* Setup(void) IUTEST_CXX_FINAL { return NULL; }
@@ -431,10 +433,14 @@ private:
 	protected:
 		::std::string m_option;
 	public:
-		bool operator == (const char* c_str_)		{ return m_option == c_str_; }
-		bool operator == (const ::std::string& str)	{ return m_option == str; }
-		bool operator != (const char* c_str_)		{ return m_option != c_str_; }
-		bool operator != (const ::std::string& str)	{ return m_option != str; }
+		friend bool operator == (const char* c_str_, const _Myt& rhs)		{ return rhs.m_option == c_str_; }
+		friend bool operator == (const ::std::string& str, const _Myt& rhs)	{ return rhs.m_option == str; }
+		friend bool operator == (const _Myt& lhs, const char* c_str_)		{ return lhs.m_option == c_str_; }
+		friend bool operator == (const _Myt& lhs, const::std::string& str)	{ return lhs.m_option == str; }
+		friend bool operator != (const char* c_str_, const _Myt& rhs)		{ return rhs.m_option != c_str_; }
+		friend bool operator != (const ::std::string& str, const _Myt& rhs)	{ return rhs.m_option != str; }
+		friend bool operator != (const _Myt& lhs, const char* c_str_)		{ return lhs.m_option != c_str_; }
+		friend bool operator != (const _Myt& lhs, const ::std::string& str)	{ return lhs.m_option != str; }
 
 		operator ::std::string (void) const { return m_option; }
 	public:
@@ -492,6 +498,7 @@ public:
 #if IUTEST_HAS_STRINGSTREAM || IUTEST_HAS_STRSTREAM
 	typedef class OStreamFormatter : public iu_stringstream
 	{
+		IUTEST_WORKAROUND_MSC_STLSTREAM_C4250()
 	public:
 		OStreamFormatter(void)
 		{
@@ -502,6 +509,10 @@ public:
 			get_vars().m_ostream_formatter.copyfmt(*this);
 		}
 	} ostream_formatter;
+
+#if defined(IUTEST_NO_PRIVATE_IN_AGGREGATE)
+	friend class OStreamFormatter;
+#endif
 
 #endif
 
@@ -524,6 +535,24 @@ public:
 		return env;
 	}
 	
+	/**
+	 * @brief	グローバル環境セットクラスの削除
+	 * @param [in]	env	= 環境セットクラスアドレス
+	 * @return	削除されたクラスアドレス
+	*/
+	static Environment* ReleaseGlobalTestEnvironment(Environment* env)
+	{
+		if( env == NULL )
+		{
+			return NULL;
+		}
+		iuEnvironmentList& list = environments();
+		iuEnvironmentList::iterator it = ::std::find(list.begin(), list.end(), env);
+		if( it == list.end() ) return NULL;
+		list.erase(it);
+		return env;
+	}
+
 	/**
 	 * @brief	default package name を追加
 	*/
@@ -679,6 +708,7 @@ private:
 
 class iu_global_format_stringstream : public iu_stringstream
 {
+	IUTEST_WORKAROUND_MSC_STLSTREAM_C4250()
 public:
 	iu_global_format_stringstream()
 	{

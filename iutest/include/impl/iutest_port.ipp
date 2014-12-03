@@ -166,6 +166,39 @@ IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
 namespace detail
 {
 
+IUTEST_IPP_INLINE char GetPathSeparator(void) IUTEST_CXX_NOEXCEPT_SPEC
+{
+#ifdef IUTEST_OS_WINDOWS
+	return '\\';
+#else
+	return '/';
+#endif
+}
+
+IUTEST_IPP_INLINE bool IsPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
+{
+#ifdef IUTEST_OS_WINDOWS
+	if( c == '\\' )
+	{
+		return true;
+	}
+#endif
+	return c == '/';
+}
+
+IUTEST_IPP_INLINE bool IsAltPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
+{
+#ifdef IUTEST_OS_WINDOWS
+	if( c == '/' )
+	{
+		return true;
+	}
+#else
+	IUTEST_UNUSED_VAR(c);
+#endif
+	return false;
+}
+
 IUTEST_IPP_INLINE bool SetEnvironmentVariable(const char* name, const char* value)
 {
 #if defined(IUTEST_OS_WINDOWS) && !defined(IUTEST_OS_WINDOWS_MOBILE) && !defined(IUTEST_OS_WINDOWS_PHONE) && !defined(IUTEST_OS_WINDOWS_RT)
@@ -345,6 +378,26 @@ IUTEST_IPP_INLINE IUTestLog::~IUTestLog(void)
 		posix::Abort();
 	}
 }
+
+#if IUTEST_HAS_STREAMCAPTURE
+
+IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_BEGIN()
+
+IUTEST_IPP_INLINE IUStreamCapture::IUStreamCapture(FILE* fp)
+	: m_fp(fp)
+{
+	m_buf[0] = '\0';
+	setbuf(fp, m_buf);
+}
+
+IUTEST_IPP_INLINE IUStreamCapture::~IUStreamCapture(void)
+{
+	setbuf(m_fp, NULL);
+}
+
+IUTEST_PRAGMA_CRT_SECURE_WARN_DISABLE_END()
+
+#endif
 
 }	// end of namespace detail
 }	// end of namespace iutest

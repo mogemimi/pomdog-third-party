@@ -226,9 +226,18 @@
 #  endif
 #endif
 
+#if !defined(IUTEST_HAS_MATCHER_ELEMENTSARE)
+//! ::iutest::ElementsAre matcher が使用可能かどうか
+#  if IUTEST_HAS_TUPLE && IUTEST_HAS_MATCHERS
+#    define IUTEST_HAS_MATCHER_ELEMENTSARE		1
+#  else
+#    define IUTEST_HAS_MATCHER_ELEMENTSARE		0
+#  endif
+#endif
+
 #if !defined(IUTEST_HAS_MATCHER_ALLOF_AND_ANYOF)
 //! ::iutest::AllOf, ::iutest::AnyOf matcher が使用可能かどうか
-#  if IUTEST_HAS_TUPLE
+#  if IUTEST_HAS_TUPLE && IUTEST_HAS_MATCHERS
 #    define IUTEST_HAS_MATCHER_ALLOF_AND_ANYOF	1
 #  else
 #    define IUTEST_HAS_MATCHER_ALLOF_AND_ANYOF	0
@@ -504,6 +513,14 @@
 #endif
 
 /**
+ * @brief	stdout/stderr の StreamCapture が使用可能かどうか
+*/
+#if !defined(IUTEST_HAS_STREAMCAPTURE)
+#  define IUTEST_HAS_STREAMCAPTURE	1
+#endif
+
+
+/**
  * @}
 */
 
@@ -626,7 +643,7 @@
 #elif _MSC_VER == 1900
 #  define IUTEST_LIB_TOOLSET	"vc140"
 #else
-#  error unkown _MSC_VER.
+#  error unknown _MSC_VER.
 #endif
 
 #if defined(_DEBUG)

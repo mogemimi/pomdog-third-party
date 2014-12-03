@@ -17,18 +17,18 @@
 
 //======================================================================
 // define
-#define	IUTEST_VER			0x01109906u	//!< iutest version 1.10.99.6
+#define IUTEST_VER			0x01110000u //!< iutest version 1.11.0.0
 #define IUTEST_MAJORVER		0x01u		//!< Major Version
-#define IUTEST_MINORVER		0x10u		//!< Minor Version
-#define IUTEST_BUILD		0x99u		//!< Build
-#define IUTEST_REVISION		0x06u		//!< Revision
+#define IUTEST_MINORVER		0x11u		//!< Minor Version
+#define IUTEST_BUILD		0x00u		//!< Build
+#define IUTEST_REVISION		0x00u		//!< Revision
 
 /**
  * @mainpage
  * @sa	@b	ProjectHome \n
  *			sourceforge : http://sourceforge.jp/projects/iutest/ \n
- *			github      : https://github.com/srz-zumix/iutest \n
- *          google group: https://groups.google.com/forum/?fromgroups#!forum/g-iutest \n
+ *			github		: https://github.com/srz-zumix/iutest \n
+ *			google group: https://groups.google.com/forum/?fromgroups#!forum/g-iutest \n
  *
  * @par		copyright
  * Copyright (C) 2011-2014, Takazumi Shirayanagi\n
@@ -110,16 +110,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /**
- * @page	CHANGELOG		変更履歴
+ * @page	CHANGELOG	変更履歴
  * @par		Changes
  <ul>
   <li>v1.11.0.0
     <ul>
-      <li>Matcher に Eq,Ne,Le,Lt,Ge,Gt,IsNull,NotNull を追加</li>
+      <li>fused-src 対応</li>
+      <li>Wandbox 対応</li>
+      <li>Matcher に Eq,Ne,Le,Lt,Ge,Gt,IsNull,NotNull,TypeEq を追加</li>
       <li>Matcher に StrEq,StrNe,StrCaseEq,StrCaseNe,HasSubstr を追加</li>
       <li>Matcher に FloatEq,DoubleEq,NanSensitiveFloatEq,NanSensitiveDoubleEq を追加</li>
+      <li>Matcher に Not,ResultOf,Pointee を追加</li>
+      <li>コンテナMatcher に Each,ContainerEq,Pointwise,At,IsEmpty,SizeIs,ElementsAre,ElementsAreArray を追加</li>
+	  <li>コンテナMatcher の Contains から HasSubstr 機能を削除</li>
+	  <li>コンテナMatcher の条件に Matcher を使えるように修正</li>
+      <li>メンバーMatcher に Key,Pair,Field を追加</li>
+      <li>ワイルドカードMatcher A,_ を追加</li>
       <li>IUTEST_*_FLOAT_EQ,DOUBLE_EQ で NAN の比較が真を返す不具合を修正</li>
-    </ul>
+	  <li>Visual Studio 2015 Preview 対応</li>
+	  </ul>
   </li>
   <li>v1.10.0.0
     <ul>
@@ -140,7 +149,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <ul>
       <li>IUTEST_P,IUTEST_TYPED_TEST_P で DISABLED_ 指定が機能しない問題を修正</li>
       <li>TestFixutre を定義しなくても IUTEST_P が使えるように対応</li>
-	  <li>Visual Studio 14 CTP 対応</li>
+      <li>Visual Studio 14 CTP 対応</li>
     </ul>
   </li>
   <li>v1.9.0.0
@@ -570,15 +579,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /**
- * @example		main.cpp
- * @example		assertion.cpp
- * @example		disabledtest.cpp
- * @example		exception.cpp
- * @example		fixture.cpp
- * @example		parameterized.cpp
- * @example		printto.cpp
- * @example		simple.cpp
- * @example		typed.cpp
+ * @example main.cpp
+ * @example assertion.cpp
+ * @example disabledtest.cpp
+ * @example exception.cpp
+ * @example fixture.cpp
+ * @example matcher.cpp
+ * @example parameterized.cpp
+ * @example printto.cpp
+ * @example simple.cpp
+ * @example typed.cpp
 */
 
 #endif // INCG_IRIS_IUTEST_VER_HPP_D65CB7A7_D2AD_40FE_8F5F_8FBF376A0010_

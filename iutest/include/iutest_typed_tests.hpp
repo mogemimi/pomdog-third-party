@@ -206,7 +206,7 @@
 
 #define IIUT_REGISTER_TYPED_TEST_CASE_P_(testcase_, ...)								\
 	namespace IUTEST_TYPED_TEST_P_NAMESPACE_(testcase_) {								\
-		typedef ::iutest::detail::Templates< __VA_ARGS__ >::type	iutest_AllTests_;	\
+		typedef ::iutest::detail::Templates< __VA_ARGS__ >::type iutest_AllTests_;		\
 	}																					\
 	static const bool s_iutest_##testcase_##_register_dummy_ IUTEST_ATTRIBUTE_UNUSED_ =	\
 	IUTEST_TYPED_TEST_CASE_PSTATE_NAME_(testcase_).VerifyTestNames(__FILE__, __LINE__, #__VA_ARGS__)
@@ -330,6 +330,10 @@ private:
 */
 class TypedTestCasePState
 {
+#if IUTEST_TYPED_TEST_P_STRICT
+	typedef ::std::set<const char*> nameset_t;
+#endif
+
 public:
 	TypedTestCasePState(void) : m_names(NULL) {}
 public:
@@ -340,9 +344,9 @@ public:
 	{
 		if( m_names != NULL )
 		{
-			fprintf(stderr, "%s Test %s must be defined before IUTEST_REGISTER_TYPED_TEST_CASE_P(%s, ...).\n"
-				, detail::FormatCompilerIndependentFileLocation(file, line).c_str(), test_name, testcase_name);
-			fflush(stderr);
+			IUTEST_LOG_(WARNING) << detail::FormatCompilerIndependentFileLocation(file, line)
+				<< ": Test " << test_name << " must be defined before IUTEST_REGISTER_TYPED_TEST_CASE_P("
+				<< testcase_name << ", ...).\n";
 		}
 #if IUTEST_TYPED_TEST_P_STRICT
 		m_list.insert(test_name);
@@ -352,36 +356,26 @@ public:
 	bool VerifyTestNames(const char* file, int line, const char* test_names)
 	{
 		m_names = test_names;
-		IUTEST_UNUSED_VAR(file);
-		IUTEST_UNUSED_VAR(line);
-		return Verify(test_names);
-	}
-
-private:
-	bool Verify(const char* names)
-	{
 		IUTEST_PRAGMA_CONSTEXPR_CALLED_AT_RUNTIME_WARN_DISABLE_BEGIN()
 #if IUTEST_TYPED_TEST_P_STRICT
-		if( names == NULL )
+		bool ret = true;
+		for( nameset_t::iterator it=m_list.begin(), end=m_list.end(); it != end; ++it )
 		{
-			return true;
+			const char* test_name = *it;
+			const char* p = strstr(test_names, test_name);
+			if( p != NULL )
+			{
+				const size_t len = strlen(test_name);
+				if( p[len] == '\0' || p[len] == ',' || detail::IsSpace(p[len]) )
+				{
+					continue;
+				}
+			}
+			IUTEST_LOG_(WARNING) << detail::FormatCompilerIndependentFileLocation(file, line)
+				<< ": Test " << test_name << " has not been registered.\n";
+			ret = false;
 		}
-		const char* comma = FindComma(names);
-		::std::string name;
-		if( comma == NULL )
-		{
-			name = names;
-		}
-		else
-		{
-			name.append(names, comma - names);
-			++comma;
-		}
-		if( m_list.find(name.c_str()) == m_list.end() )
-		{
-			return false;
-		}
-		return Verify(SkipSpace(comma));
+		return ret;
 #else
 		IUTEST_UNUSED_VAR(names);
 		return true;
@@ -393,7 +387,7 @@ private:
 	const char* m_names;
 
 #if IUTEST_TYPED_TEST_P_STRICT
-	::std::set<const char*> m_list;
+	nameset_t m_list;
 #endif
 
 	IUTEST_PP_DISALLOW_COPY_AND_ASSIGN(TypedTestCasePState);

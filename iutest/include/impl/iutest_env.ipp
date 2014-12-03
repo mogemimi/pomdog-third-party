@@ -22,13 +22,19 @@
 namespace iutest
 {
 
+IUTEST_IPP_INLINE void Environment::Release()
+{
+	TestEnv::ReleaseGlobalTestEnvironment(this);
+}
+
 IUTEST_IPP_INLINE ::std::string TestEnv::get_report_xml_filepath(void)
 {
 	const ::std::string& option = get_vars().m_output_option;
 	if(option.find("xml") != ::std::string::npos)
 	{
 		const ::std::string::size_type pos = option.find("xml:");
-		if(pos != ::std::string::npos)
+		if(pos != ::std::string::npos
+			&& option.length() > pos + 4)
 		{
 			return option.substr(pos + 4);
 		}

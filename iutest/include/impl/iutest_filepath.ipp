@@ -25,8 +25,9 @@ namespace detail
 
 IUTEST_IPP_INLINE bool iuFilePath::IsDirectory(void) const
 {
+	const char last = m_path.c_str()[length() - 1];
 	return !m_path.empty() &&
-		IsPathSeparator(m_path.c_str()[length()-1]);
+		(IsPathSeparator(last) || last == '.');
 }
 
 IUTEST_IPP_INLINE bool iuFilePath::IsRootDirectory(void) const
@@ -173,10 +174,6 @@ IUTEST_IPP_INLINE bool iuFilePath::DirectoryExists(void) const
 IUTEST_IPP_INLINE const char* iuFilePath::FindLastPathSeparator(void) const
 {
 	const char* ps = c_str();
-	if( ps == NULL )
-	{
-		return NULL;
-	}
 	const char* pe = ps + length() - 1;
 	while( pe >= ps )
 	{
@@ -244,24 +241,9 @@ IUTEST_IPP_INLINE iuFilePath iuFilePath::ConcatPaths(const iuFilePath& directory
 	return iuFilePath(path);
 }
 
-IUTEST_IPP_INLINE char iuFilePath::GetPathSeparator(void) IUTEST_CXX_NOEXCEPT_SPEC
-{
-#ifdef IUTEST_OS_WINDOWS
-	return '\\';
-#else
-	return '/';
-#endif
-}
-
 IUTEST_IPP_INLINE void iuFilePath::Normalize(void)
 {
 	const char* src = c_str();
-	if( src == NULL )
-	{
-		m_path = "";
-		return;
-	}
-
 	char* const dst_top = new char [length()+1];
 	char* dst = dst_top;
 
@@ -289,30 +271,6 @@ IUTEST_IPP_INLINE void iuFilePath::Normalize(void)
 	*dst = '\0';
 	m_path = dst_top;
 	delete [] dst_top;
-}
-
-IUTEST_IPP_INLINE bool iuFilePath::IsPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
-{
-#ifdef IUTEST_OS_WINDOWS
-	if( c == '\\' )
-	{
-		return true;
-	}
-#endif
-	return c == '/';
-}
-
-IUTEST_IPP_INLINE bool iuFilePath::IsAltPathSeparator(char c) IUTEST_CXX_NOEXCEPT_SPEC
-{
-#ifdef IUTEST_OS_WINDOWS
-	if( c == '/' )
-	{
-		return true;
-	}
-#else
-	IUTEST_UNUSED_VAR(c);
-#endif
-	return false;
 }
 
 }	// end of namespace detail

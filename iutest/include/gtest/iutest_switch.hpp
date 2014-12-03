@@ -69,6 +69,8 @@
 #include "switch/iutest_switch_port.hpp"
 #include "switch/iutest_switch_core.hpp"
 
+#include "switch/iutest_switch_gmock.hpp"
+
 #include "switch/iutest_switch_assert.hpp"
 #include "switch/iutest_switch_expect.hpp"
 #include "switch/iutest_switch_inform.hpp"
@@ -167,6 +169,10 @@ namespace tr1
 // include
 #include "../iutest_ver.hpp"
 #include <gtest/gtest.h>
+#if defined(IUTEST_USE_GMOCK)
+#include <gmock/gmock.h>
+#include "iutest_gmock_ver.hpp"
+#endif
 #include "iutest_gtest_ver.hpp"
 #include "../internal/iutest_pragma.hpp"
 
@@ -190,8 +196,8 @@ namespace tr1
 #undef IUTEST_HAS_VARIADIC_PRED
 #undef IUTEST_HAS_TYPED_TEST
 #undef IUTEST_HAS_TYPED_TEST_P
+#undef IUTEST_TYPED_TEST_P_STRICT
 
-#undef IUTEST_HAS_MATCHERS
 #undef IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE
 #undef IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE
 
@@ -223,6 +229,8 @@ namespace tr1
 #undef IUTEST_HAS_RTTI
 #undef IUTEST_HAS_SEH
 
+#undef IUTEST_HAS_STREAMCAPTURE
+
 #undef IUTEST_OPERAND
 #undef IUTEST_EXPRESSION
 
@@ -244,8 +252,8 @@ namespace tr1
 #define IUTEST_HAS_VARIADIC_PRED			0
 #define IUTEST_HAS_TYPED_TEST				GTEST_HAS_TYPED_TEST
 #define IUTEST_HAS_TYPED_TEST_P				GTEST_HAS_TYPED_TEST_P
+#define IUTEST_TYPED_TEST_P_STRICT			1
 
-#define IUTEST_HAS_MATCHERS							0
 #define IUTEST_HAS_ARITHMETIC_EXPRESSION_DECOMPOSE	0
 #define IUTEST_HAS_BITWISE_EXPRESSION_DECOMPOSE		1
 
@@ -263,12 +271,16 @@ namespace tr1
 #define IUTEST_HAS_TESTNAME_ALIAS_JP	0
 #define IUTEST_HAS_STREAM_RESULT		1
 
+#define IUTEST_HAS_STREAMCAPTURE		0
+
 #define IUTEST_HAS_EXCEPTIONS		GTEST_HAS_EXCEPTIONS
 #define IUTEST_HAS_RTTI				GTEST_HAS_RTTI
 #define IUTEST_HAS_SEH				GTEST_HAS_SEH
 
 #include "switch/iutest_switch_port.hpp"
 #include "switch/iutest_switch_core.hpp"
+
+#include "switch/iutest_switch_gmock.hpp"
 
 #include "switch/iutest_switch_assert.hpp"
 #include "switch/iutest_switch_expect.hpp"
