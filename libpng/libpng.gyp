@@ -62,26 +62,29 @@
       'msbuild_configuration_attributes': {
         'CharacterSet': 'MultiByte',
       },
-      'msvs_settings':{
-        'VCCLCompilerTool': {
+      'msbuild_settings': {
+        'ClCompile': {
           'SuppressStartupBanner': 'true',    # /nologo
-          'WarningLevel': '4',                # /W4
-          'Optimization': '3',                # /Ox
-          'EnableIntrinsicFunctions': 'true', # /Oi
-          'WholeProgramOptimization': 'true', # /GL
+          'WarningLevel': 'Level4',           # /W4
+          'Optimization': 'Full',             # /Ox
+          'IntrinsicFunctions': 'true',       # /Oi
+          #'WholeProgramOptimization': 'true', # /GL
           'PreprocessorDefinitions': [
             'WIN32',
             '_WINDOWS',
           ],
-          'MinimalRebuild': 'false',            # /Gm-
-          'EnableFunctionLevelLinking': 'true', # /Gy
-          'FloatingPointExceptions': 'false',   # /fp:except-
-          'CompileAs': '1',                     # /TC
-          'StringPooling': 'true',              # /GF
-          'DisableSpecificWarnings': ['4996'],  # /wd"4996"
+          'MinimalRebuild': 'false',          # /Gm-
+          'FunctionLevelLinking': 'true',     # /Gy
+          'FloatingPointExceptions': 'false', # /fp:except-
+          'CompileAs': 'CompileAsC',          # /TC
+          'StringPooling': 'true',            # /GF
+          'DisableSpecificWarnings': [
+            '4996', '4127'
+          ], # /wd"4996"
+          'TreatWChar_tAsBuiltInType': 'false', # /Zc:wchar_t-
         },
-        'VCLibrarianTool': {
-          'LinkTimeCodeGeneration': 'true', # /LTCG
+        'Lib': {
+          #'LinkTimeCodeGeneration': 'true', # /LTCG
         },
       },
       'xcode_settings': {

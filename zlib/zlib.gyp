@@ -39,6 +39,7 @@
       'default_configuration': 'Release',
       'configurations': {
         'Debug': {
+          'defines': ['_DEBUG'],
           'msbuild_settings':{
             'ClCompile': {
               'RuntimeLibrary': 'MultiThreadedDebug', # /MTd
@@ -65,7 +66,7 @@
         'ClCompile': {
           'PreprocessorDefinitions': [
             'WIN32',
-            'ZLIB_WINAPI',
+            '_WINDOWS',
             '_CRT_NONSTDC_NO_DEPRECATE',
             '_CRT_SECURE_NO_DEPRECATE',
             '_CRT_NONSTDC_NO_WARNINGS',
