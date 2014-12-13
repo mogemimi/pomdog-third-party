@@ -23,6 +23,7 @@
         'pnglibconf.h',
         'pngmem.c',
         'pngpread.c',
+        'pngpriv.h',
         'pngread.c',
         'pngrio.c',
         'pngrtran.c',
@@ -38,23 +39,28 @@
       'default_configuration': 'Release',
       'configurations': {
         'Debug': {
-          'msvs_settings':{
-            'VCCLCompilerTool': {
-              'RuntimeLibrary': '1', # /MTd
+          'defines': ['_DEBUG'],
+          'msbuild_settings':{
+            'ClCompile': {
+              'RuntimeLibrary': 'MultiThreadedDebug', # /MTd
             },
           },
         },
         'Release': {
           'defines': ['NDEBUG'],
-            'msvs_settings':{
-              'VCCLCompilerTool': {
-                'RuntimeLibrary': '0', # /MT
-              },
+          'msbuild_settings': {
+            'ClCompile': {
+              'RuntimeLibrary': 'MultiThreaded', # /MT
             },
+            'Link': {
+              'EnableCOMDATFolding': 'true',
+              'OptimizeReferences': 'true',
+            },
+          },
         },
       },
-      'msvs_configuration_attributes': {
-        'CharacterSet': '2', # Multibyte Character Set
+      'msbuild_configuration_attributes': {
+        'CharacterSet': 'MultiByte',
       },
       'msvs_settings':{
         'VCCLCompilerTool': {

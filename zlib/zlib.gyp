@@ -39,30 +39,30 @@
       'default_configuration': 'Release',
       'configurations': {
         'Debug': {
-          'msvs_settings':{
-            'VCCLCompilerTool': {
-              'RuntimeLibrary': '1', # /MTd
+          'msbuild_settings':{
+            'ClCompile': {
+              'RuntimeLibrary': 'MultiThreadedDebug', # /MTd
             },
           },
         },
         'Release': {
           'defines': ['NDEBUG'],
-          'msvs_settings':{
-            'VCCLCompilerTool': {
+          'msbuild_settings':{
+            'ClCompile': {
               'PreprocessorDefinitions': [
                 'ASMV',
                 'ASMINF',
               ],
-              'RuntimeLibrary': '0', # /MT
+              'RuntimeLibrary': 'MultiThreaded', # /MT
             },
           },
         },
       },
-      'msvs_configuration_attributes': {
-        'CharacterSet': '1', # Unicode Character Set
+      'msbuild_configuration_attributes': {
+        'CharacterSet': 'Unicode',
       },
-      'msvs_settings':{
-        'VCCLCompilerTool': {
+      'msbuild_settings':{
+        'ClCompile': {
           'PreprocessorDefinitions': [
             'WIN32',
             'ZLIB_WINAPI',
@@ -70,13 +70,13 @@
             '_CRT_SECURE_NO_DEPRECATE',
             '_CRT_NONSTDC_NO_WARNINGS',
           ],
-          'SuppressStartupBanner': 'true',      # /nologo
-          'WarningLevel': '3',                  # /W3
-          'Optimization': '2',                  # /O2
-          'InlineFunctionExpansion': '1',       # /Ob1
-          'StringPooling': 'true',              # /GF
-          'EnableFunctionLevelLinking': 'true', # /Gy
-          'BufferSecurityCheck': 'false',       # /GS-
+          'SuppressStartupBanner': 'true',                 # /nologo
+          'WarningLevel': 'Level3',                        # /W3
+          'Optimization': 'MaxSpeed',                      # /O2
+          'InlineFunctionExpansion': 'OnlyExplicitInline', # /Ob1
+          'StringPooling': 'true',                         # /GF
+          'FunctionLevelLinking': 'true',                  # /Gy
+          'BufferSecurityCheck': 'false',                  # /GS-
         },
       },
       'xcode_settings': {
