@@ -3,6 +3,20 @@ Open Source Software used in Pomdog
 
 All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs to build or run.
 
+### GLEW
+
+* [SourceForge](http://glew.sourceforge.net/)
+* [GLEW - GitHub](https://github.com/nigels-com/glew)
+
+|GLEW||
+|---|---|
+|URL|https://github.com/nigels-com/glew.git|
+|Version|1.11.0|
+|License|Modified BSD License|
+|License File|[third_party/glew/LICENSE.txt][license-glew]|
+
+[license-glew]: glew/LICENSE.txt
+
 ### iutest - iris unit test framework
 
 * [SourceForge](http://iutest.sourceforge.jp/)
