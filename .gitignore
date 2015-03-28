@@ -16,6 +16,7 @@
 /libpng/build
 /lua/build
 /zlib/build
+/iutest/
 
 # PyCharm/IntelliJ IDEA
 .idea/
