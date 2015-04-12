@@ -6,6 +6,13 @@
       'Debug': {},
       'Release': {},
     },
+    'conditions': [
+      ['OS == "ios"', {
+        'xcode_settings': {
+          'SDKROOT': 'iphoneos',
+        },
+      }],
+    ],
   },
   'targets': [
     {

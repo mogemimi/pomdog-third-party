@@ -5,12 +5,31 @@
       'target_name': 'libpng_static',
       'product_name': 'libpng',
       'type': 'static_library',
-      'dependencies': [
-        '../zlib/zlib.gyp:zlib_static',
+      'conditions': [
+        ['OS == "ios"', {
+          'xcode_settings': {
+            'IPHONEOS_DEPLOYMENT_TARGET': '8.0',
+            'SDKROOT': 'iphoneos',
+          },
+          'link_settings': {
+            'libraries': [
+              '$(SDKROOT)/usr/lib/libz.dylib',
+            ],
+          },
+          'include_dirs': [
+            '$(SDKROOT)/usr/include',
+          ],
+        }, {
+          'dependencies': [
+            '../zlib/zlib.gyp:zlib_static',
+          ],
+          'include_dirs': [
+            '../zlib',
+          ],
+        }],
       ],
       'include_dirs': [
         '.',
-        '../zlib',
       ],
       'sources': [
         'png.c',
