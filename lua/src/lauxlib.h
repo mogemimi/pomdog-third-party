@@ -1,5 +1,5 @@
 /*
-** $Id: lauxlib.h,v 1.125 2014/06/26 17:25:11 roberto Exp $
+** $Id: lauxlib.h,v 1.128 2014/10/29 16:11:17 roberto Exp $
 ** Auxiliary functions for building Lua libraries
 ** See Copyright Notice in lua.h
 */
@@ -16,7 +16,7 @@
 
 
 
-/* extra error code for `luaL_load' */
+/* extra error code for 'luaL_load' */
 #define LUA_ERRFILE     (LUA_ERRERR+1)
 
 
@@ -115,10 +115,6 @@ LUALIB_API void (luaL_requiref) (lua_State *L, const char *modname,
 		((void)((cond) || luaL_argerror(L, (arg), (extramsg))))
 #define luaL_checkstring(L,n)	(luaL_checklstring(L, (n), NULL))
 #define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
-#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
-#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
-#define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
-#define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
 
 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 
@@ -209,15 +205,46 @@ LUALIB_API void (luaL_openlib) (lua_State *L, const char *libname,
 
 
 /*
+** {==================================================================
+** "Abstraction Layer" for basic report of messages and errors
+** ===================================================================
+*/
+
+/* print a string */
+#if !defined(lua_writestring)
+#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
+#endif
+
+/* print a newline and flush the output */
+#if !defined(lua_writeline)
+#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
+#endif
+
+/* print an error message */
+#if !defined(lua_writestringerror)
+#define lua_writestringerror(s,p) \
+        (fprintf(stderr, (s), (p)), fflush(stderr))
+#endif
+
+/* }================================================================== */
+
+
+/*
 ** {============================================================
-** Compatibility with deprecated unsigned conversions
+** Compatibility with deprecated conversions
 ** =============================================================
 */
-#if defined(LUA_COMPAT_APIUNSIGNED)
+#if defined(LUA_COMPAT_APIINTCASTS)
 
-#define luaL_checkunsigned(L,a)		((lua_Unsigned)luaL_checkinteger(L,a))
+#define luaL_checkunsigned(L,a)	((lua_Unsigned)luaL_checkinteger(L,a))
 #define luaL_optunsigned(L,a,d)	\
 	((lua_Unsigned)luaL_optinteger(L,a,(lua_Integer)(d)))
+
+#define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
+#define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+
+#define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
+#define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
 
 #endif
 /* }============================================================ */

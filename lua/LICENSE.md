@@ -1,4 +1,4 @@
-This is Lua 5.3.0 (alpha), released on 31 Jul 2014.
+This is Lua 5.3.0, released on 06 Jan 2015.
 
 ## License 
 

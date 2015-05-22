@@ -1,15 +1,17 @@
 /*
-** $Id: lmathlib.c,v 1.108 2014/07/28 17:35:47 roberto Exp $
+** $Id: lmathlib.c,v 1.114 2014/12/27 20:32:26 roberto Exp $
 ** Standard mathematical library
 ** See Copyright Notice in lua.h
 */
 
+#define lmathlib_c
+#define LUA_LIB
+
+#include "lprefix.h"
+
 
 #include <stdlib.h>
 #include <math.h>
-
-#define lmathlib_c
-#define LUA_LIB
 
 #include "lua.h"
 
@@ -25,9 +27,11 @@
 #if defined(LUA_USE_POSIX)
 #define l_rand()	random()
 #define l_srand(x)	srandom(x)
+#define L_RANDMAX	2147483647	/* (2^31 - 1), following POSIX */
 #else
 #define l_rand()	rand()
 #define l_srand(x)	srand(x)
+#define L_RANDMAX	RAND_MAX
 #endif
 #endif				/* } */
 
@@ -91,7 +95,7 @@ static int math_toint (lua_State *L) {
 
 static void pushnumint (lua_State *L, lua_Number d) {
   lua_Integer n;
-  if (lua_numtointeger(d, &n))  /* does 'd' fit in an integer? */
+  if (lua_numbertointeger(d, &n))  /* does 'd' fit in an integer? */
     lua_pushinteger(L, n);  /* result is integer */
   else
     lua_pushnumber(L, d);  /* result is float */
@@ -153,7 +157,7 @@ static int math_modf (lua_State *L) {
     lua_Number ip = (n < 0) ? l_mathop(ceil)(n) : l_mathop(floor)(n);
     pushnumint(L, ip);
     /* fractional part (test needed for inf/-inf) */
-    lua_pushnumber(L, (n == ip) ? 0.0 : (n - ip));
+    lua_pushnumber(L, (n == ip) ? l_mathop(0.0) : (n - ip));
   }
   return 2;
 }
@@ -192,12 +196,12 @@ static int math_exp (lua_State *L) {
 }
 
 static int math_deg (lua_State *L) {
-  lua_pushnumber(L, luaL_checknumber(L, 1) * (180.0 / PI));
+  lua_pushnumber(L, luaL_checknumber(L, 1) * (l_mathop(180.0) / PI));
   return 1;
 }
 
 static int math_rad (lua_State *L) {
-  lua_pushnumber(L, luaL_checknumber(L, 1) * (PI / 180.0));
+  lua_pushnumber(L, luaL_checknumber(L, 1) * (PI / l_mathop(180.0)));
   return 1;
 }
 
@@ -231,15 +235,15 @@ static int math_max (lua_State *L) {
 
 /*
 ** This function uses 'double' (instead of 'lua_Number') to ensure that
-** all bits from 'l_rand' can be represented, and that 'RAND_MAX + 1.0'
+** all bits from 'l_rand' can be represented, and that 'RANDMAX + 1.0'
 ** will keep full precision (ensuring that 'r' is always less than 1.0.)
 */
 static int math_random (lua_State *L) {
   lua_Integer low, up;
-  double r = (double)l_rand() * (1.0 / ((double)RAND_MAX + 1.0));
+  double r = (double)l_rand() * (1.0 / ((double)L_RANDMAX + 1.0));
   switch (lua_gettop(L)) {  /* check number of arguments */
     case 0: {  /* no arguments */
-      lua_pushnumber(L, r);  /* Number between 0 and 1 */
+      lua_pushnumber(L, (lua_Number)r);  /* Number between 0 and 1 */
       return 1;
     }
     case 1: {  /* only upper limit */
@@ -256,8 +260,8 @@ static int math_random (lua_State *L) {
   }
   /* random integer in the interval [low, up] */
   luaL_argcheck(L, low <= up, 1, "interval is empty"); 
-  luaL_argcheck(L, (lua_Unsigned)up - low <= (lua_Unsigned)LUA_MAXINTEGER,
-                   1, "interval too large");
+  luaL_argcheck(L, low >= 0 || up <= LUA_MAXINTEGER + low, 1,
+                   "interval too large");
   r *= (double)(up - low) + 1.0;
   lua_pushinteger(L, (lua_Integer)r + low);
   return 1;
@@ -324,7 +328,7 @@ static int math_frexp (lua_State *L) {
 
 static int math_ldexp (lua_State *L) {
   lua_Number x = luaL_checknumber(L, 1);
-  int ep = luaL_checkint(L, 2);
+  int ep = (int)luaL_checkinteger(L, 2);
   lua_pushnumber(L, l_mathop(ldexp)(x, ep));
   return 1;
 }
@@ -389,7 +393,7 @@ LUAMOD_API int luaopen_math (lua_State *L) {
   luaL_newlib(L, mathlib);
   lua_pushnumber(L, PI);
   lua_setfield(L, -2, "pi");
-  lua_pushnumber(L, HUGE_VAL);
+  lua_pushnumber(L, (lua_Number)HUGE_VAL);
   lua_setfield(L, -2, "huge");
   lua_pushinteger(L, LUA_MAXINTEGER);
   lua_setfield(L, -2, "maxinteger");

@@ -51,7 +51,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |Lua||
 |---|---|
 |URL|http://www.lua.org/|
-|Version|5.3.0 (alpha)|
+|Version|5.3.0|
 |License|MIT License|
 |License File|[third_party/lua/LICENSE.md][license-lua]|
 

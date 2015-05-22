@@ -1,16 +1,18 @@
 /*
-** $Id: ldo.c,v 2.126 2014/07/17 13:53:37 roberto Exp $
+** $Id: ldo.c,v 2.135 2014/11/11 17:13:39 roberto Exp $
 ** Stack and Call structure of Lua
 ** See Copyright Notice in lua.h
 */
+
+#define ldo_c
+#define LUA_CORE
+
+#include "lprefix.h"
 
 
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define ldo_c
-#define LUA_CORE
 
 #include "lua.h"
 
@@ -67,7 +69,7 @@
 
 #else							/* }{ */
 
-/* ANSI handling with long jumps */
+/* ISO C handling with long jumps */
 #define LUAI_THROW(L,c)		longjmp((c)->b, 1)
 #define LUAI_TRY(L,c,a)		if (setjmp((c)->b) == 0) { a }
 #define luai_jmpbuf		jmp_buf
@@ -111,15 +113,19 @@ l_noret luaD_throw (lua_State *L, int errcode) {
     LUAI_THROW(L, L->errorJmp);  /* jump to it */
   }
   else {  /* thread has no error handler */
+    global_State *g = G(L);
     L->status = cast_byte(errcode);  /* mark it as dead */
-    if (G(L)->mainthread->errorJmp) {  /* main thread has a handler? */
-      setobjs2s(L, G(L)->mainthread->top++, L->top - 1);  /* copy error obj. */
-      luaD_throw(G(L)->mainthread, errcode);  /* re-throw in main thread */
+    if (g->mainthread->errorJmp) {  /* main thread has a handler? */
+      setobjs2s(L, g->mainthread->top++, L->top - 1);  /* copy error obj. */
+      luaD_throw(g->mainthread, errcode);  /* re-throw in main thread */
     }
     else {  /* no handler at all; abort */
-      if (G(L)->panic) {  /* panic function? */
+      if (g->panic) {  /* panic function? */
+        seterrorobj(L, errcode, L->top);  /* assume EXTRA_STACK */
+        if (L->ci->top < L->top)
+          L->ci->top = L->top;  /* pushing msg. can break this invariant */
         lua_unlock(L);
-        G(L)->panic(L);  /* call it (last chance to jump out) */
+        g->panic(L);  /* call panic function (last chance to jump out) */
       }
       abort();
     }
@@ -280,18 +286,21 @@ static StkId adjust_varargs (lua_State *L, Proto *p, int actual) {
 }
 
 
-static StkId tryfuncTM (lua_State *L, StkId func) {
+/*
+** Check whether __call metafield of 'func' is a function. If so, put
+** it in stack below original 'func' so that 'luaD_precall' can call
+** it. Raise an error if __call metafield is not a function.
+*/
+static void tryfuncTM (lua_State *L, StkId func) {
   const TValue *tm = luaT_gettmbyobj(L, func, TM_CALL);
   StkId p;
-  ptrdiff_t funcr = savestack(L, func);
   if (!ttisfunction(tm))
     luaG_typeerror(L, func, "call");
-  /* Open a hole inside the stack at `func' */
-  for (p = L->top; p > func; p--) setobjs2s(L, p, p-1);
-  incr_top(L);
-  func = restorestack(L, funcr);  /* previous call may change stack */
+  /* Open a hole inside the stack at 'func' */
+  for (p = L->top; p > func; p--)
+    setobjs2s(L, p, p-1);
+  L->top++;  /* slot ensured by caller */
   setobj2s(L, func, tm);  /* tag method is the new function to be called */
-  return func;
 }
 
 
@@ -361,7 +370,9 @@ int luaD_precall (lua_State *L, StkId func, int nresults) {
       return 0;
     }
     default: {  /* not a function */
-      func = tryfuncTM(L, func);  /* retry with 'function' tag method */
+      luaD_checkstack(L, 1);  /* ensure space for metamethod */
+      func = restorestack(L, funcr);  /* previous call may change stack */
+      tryfuncTM(L, func);  /* try to get '__call' metamethod */
       return luaD_precall(L, func, nresults);  /* now it must be a function */
     }
   }
@@ -574,7 +585,7 @@ LUA_API int lua_resume (lua_State *L, lua_State *from, int nargs) {
       status = luaD_rawrunprotected(L, unroll, &status);
     }
     if (errorstatus(status)) {  /* unrecoverable error? */
-      L->status = cast_byte(status);  /* mark thread as `dead' */
+      L->status = cast_byte(status);  /* mark thread as 'dead' */
       seterrorobj(L, status, L->top);  /* push error message */
       L->ci->top = L->top;
     }
@@ -593,7 +604,7 @@ LUA_API int lua_isyieldable (lua_State *L) {
 }
 
 
-LUA_API int lua_yieldk (lua_State *L, int nresults, lua_Ctx ctx,
+LUA_API int lua_yieldk (lua_State *L, int nresults, lua_KContext ctx,
                         lua_KFunction k) {
   CallInfo *ci = L->ci;
   luai_userstateyield(L, nresults);
@@ -649,7 +660,7 @@ int luaD_pcall (lua_State *L, Pfunc func, void *u,
 /*
 ** Execute a protected parser.
 */
-struct SParser {  /* data to `f_parser' */
+struct SParser {  /* data to 'f_parser' */
   ZIO *z;
   Mbuffer buff;  /* dynamic structure used by the scanner */
   Dyndata dyd;  /* dynamic structures used by the parser */
@@ -661,7 +672,7 @@ struct SParser {  /* data to `f_parser' */
 static void checkmode (lua_State *L, const char *mode, const char *x) {
   if (mode && strchr(mode, x[0]) == NULL) {
     luaO_pushfstring(L,
-       "attempt to load a %s chunk (mode is " LUA_QS ")", x, mode);
+       "attempt to load a %s chunk (mode is '%s')", x, mode);
     luaD_throw(L, LUA_ERRSYNTAX);
   }
 }

@@ -1,5 +1,5 @@
 /*
-** $Id: lobject.h,v 2.101 2014/07/30 14:00:14 roberto Exp $
+** $Id: lobject.h,v 2.106 2015/01/05 13:52:37 roberto Exp $
 ** Type definitions for Lua objects
 ** See Copyright Notice in lua.h
 */
@@ -154,6 +154,8 @@ typedef struct lua_TValue TValue;
 /* Macros to access values */
 #define ivalue(o)	check_exp(ttisinteger(o), val_(o).i)
 #define fltvalue(o)	check_exp(ttisfloat(o), val_(o).n)
+#define nvalue(o)	check_exp(ttisnumber(o), \
+	(ttisinteger(o) ? cast_num(ivalue(o)) : fltvalue(o)))
 #define gcvalue(o)	check_exp(iscollectable(o), val_(o).gc)
 #define pvalue(o)	check_exp(ttislightuserdata(o), val_(o).p)
 #define tsvalue(o)	check_exp(ttisstring(o), gco2ts(val_(o).gc))
@@ -345,7 +347,7 @@ typedef struct Udata {
 ** Ensures that address after this type is always fully aligned.
 */
 typedef union UUdata {
-  L_Umaxalign dummy;  /* ensures maximum alignment for `local' udata */
+  L_Umaxalign dummy;  /* ensures maximum alignment for 'local' udata */
   Udata uv;
 } UUdata;
 
@@ -399,10 +401,10 @@ typedef struct Proto {
   lu_byte is_vararg;
   lu_byte maxstacksize;  /* maximum stack used by this function */
   int sizeupvalues;  /* size of 'upvalues' */
-  int sizek;  /* size of `k' */
+  int sizek;  /* size of 'k' */
   int sizecode;
   int sizelineinfo;
-  int sizep;  /* size of `p' */
+  int sizep;  /* size of 'p' */
   int sizelocvars;
   int linedefined;
   int lastlinedefined;
@@ -471,7 +473,7 @@ typedef union TKey {
 
 
 /* copy a value into a key without messing up field 'next' */
-#define setkey(L,key,obj) \
+#define setnodekey(L,key,obj) \
 	{ TKey *k_=(key); const TValue *io_=(obj); \
 	  k_->nk.value_ = io_->value_; k_->nk.tt_ = io_->tt_; \
 	  (void)L; checkliveness(G(L),io_); }
@@ -486,8 +488,8 @@ typedef struct Node {
 typedef struct Table {
   CommonHeader;
   lu_byte flags;  /* 1<<p means tagmethod(p) is not present */
-  lu_byte lsizenode;  /* log2 of size of `node' array */
-  int sizearray;  /* size of `array' array */
+  lu_byte lsizenode;  /* log2 of size of 'node' array */
+  unsigned int sizearray;  /* size of 'array' array */
   TValue *array;  /* array part */
   Node *node;
   Node *lastfree;  /* any free position is before this position */
@@ -498,7 +500,7 @@ typedef struct Table {
 
 
 /*
-** `module' operation for hashing (size is always a power of 2)
+** 'module' operation for hashing (size is always a power of 2)
 */
 #define lmod(s,size) \
 	(check_exp((size&(size-1))==0, (cast(int, (s) & ((size)-1)))))
@@ -521,7 +523,7 @@ LUAI_DDEC const TValue luaO_nilobject_;
 
 LUAI_FUNC int luaO_int2fb (unsigned int x);
 LUAI_FUNC int luaO_fb2int (int x);
-LUAI_FUNC int luaO_utf8esc (char *buff, unsigned int x);
+LUAI_FUNC int luaO_utf8esc (char *buff, unsigned long x);
 LUAI_FUNC int luaO_ceillog2 (unsigned int x);
 LUAI_FUNC void luaO_arith (lua_State *L, int op, const TValue *p1,
                            const TValue *p2, TValue *res);
