@@ -82,6 +82,7 @@
       },
       'xcode_settings': {
         'SKIP_INSTALL': 'YES',
+        'GCC_C_LANGUAGE_STANDARD': 'c89',
       },
     },
   ],
