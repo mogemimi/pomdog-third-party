@@ -72,6 +72,7 @@
       },
       'xcode_settings': {
 	    'SKIP_INSTALL': 'YES',
+        'COMBINE_HIDPI_IMAGES': 'YES',
       },
     },
   ],# "targets"
