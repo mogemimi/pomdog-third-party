@@ -25,7 +25,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |iutest||
 |---|---|
 |URL|https://github.com/srz-zumix/iutest.git|
-|Version|1.10.0|
+|Version|1.11.1|
 |License|New (3-clause) BSD License|
 |License File|[third_party/iutest/LICENSE][license-iutest]|
 
@@ -65,7 +65,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |RapidJSON||
 |---|---|
 |URL|https://github.com/miloyip/rapidjson.git|
-|Version|0.1+ (Sep 16, 2014)|
+|Version|1.0.2|
 |License|MIT License|
 |License File|[third_party/rapidjson/license.txt][license-rapidjson]|
 
