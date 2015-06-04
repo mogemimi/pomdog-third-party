@@ -11,7 +11,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |GLEW||
 |---|---|
 |URL|https://github.com/nigels-com/glew.git|
-|Version|1.11.0|
+|Version|1.12.0|
 |License|Modified BSD License|
 |License File|[third_party/glew/LICENSE.txt][license-glew]|
 

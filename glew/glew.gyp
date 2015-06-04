@@ -1,4 +1,3 @@
-# glew.gyp - for GLEW 1.11.0
 {
   'targets': [
     {
