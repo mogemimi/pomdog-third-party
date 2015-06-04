@@ -61,6 +61,16 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |License|MIT License|
 |License File|[rapidjson/license.txt][license-rapidjson]|
 
+### UTF8-CPP
+
+* [UTF8-CPP: UTF-8 with C++ in a Portable Way](http://utfcpp.sourceforge.net/)
+
+|UTF8-CPP||
+|---|---|
+|URL|http://sourceforge.net/projects/utfcpp/|
+|Version|2.3.4|
+|License|Boost Software License - Version 1.0|
+|License File|[utf8cpp/utf8.h][license-utf8cpp]|
 
 ### zlib
 
@@ -79,4 +89,5 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 [license-libpng]: libpng/LICENSE
 [license-lua]: lua/LICENSE.md
 [license-rapidjson]: rapidjson/license.txt
+[license-utf8cpp]: utf8cpp/utf8.h
 [license-zlib]: zlib/LICENSE
