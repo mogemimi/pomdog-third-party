@@ -61,6 +61,17 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |License|MIT License|
 |License File|[rapidjson/license.txt][license-rapidjson]|
 
+### stb
+
+* [stb - GitHub](https://github.com/nothings/stb)
+
+|stb||
+|---|---|
+|URL|https://github.com/nothings/stb.git|
+|Version|2.24|
+|License|public domain|
+|License File|public domain|
+
 ### UTF8-CPP
 
 * [UTF8-CPP: UTF-8 with C++ in a Portable Way](http://utfcpp.sourceforge.net/)
