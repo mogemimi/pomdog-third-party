@@ -38,17 +38,6 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 |License|libpng License|
 |License File|[libpng/LICENSE][license-libpng]|
 
-### Lua
-
-* [The Programming Language Lua](http://www.lua.org/)
-
-|Lua||
-|---|---|
-|URL|http://www.lua.org/|
-|Version|5.3.0|
-|License|MIT License|
-|License File|[lua/LICENSE.md][license-lua]|
-
 ### RapidJSON
 
 * [RapidJSON - GitHub](https://github.com/miloyip/rapidjson)
