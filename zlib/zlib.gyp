@@ -84,6 +84,7 @@
         'SKIP_INSTALL': 'YES',
         'COMBINE_HIDPI_IMAGES': 'YES',
         'GCC_C_LANGUAGE_STANDARD': 'c89',
+        'MACOSX_DEPLOYMENT_TARGET': '10.9',
       },
     },
   ],

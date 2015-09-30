@@ -6,6 +6,11 @@
       'product_name': 'libpng',
       'type': 'static_library',
       'conditions': [
+        ['OS == "mac"', {
+          'xcode_settings': {
+            'MACOSX_DEPLOYMENT_TARGET': '10.9',
+          },
+        }],
         ['OS == "ios"', {
           'xcode_settings': {
             'IPHONEOS_DEPLOYMENT_TARGET': '8.0',
