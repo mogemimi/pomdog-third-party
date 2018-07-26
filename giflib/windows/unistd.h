@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 // This file prevents the following error when compiling GIFLIB on Windows.
 // ```
