@@ -1,0 +1,4 @@
+// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
