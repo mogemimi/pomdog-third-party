@@ -5,6 +5,9 @@
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wconditional-uninitialized"
 #pragma clang diagnostic ignored "-Wshadow"
+#if defined(__EMSCRIPTEN__)
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
 #endif
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
