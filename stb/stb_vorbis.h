@@ -5,7 +5,7 @@
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wconditional-uninitialized"
 #pragma clang diagnostic ignored "-Wshadow"
-#if defined(__EMSCRIPTEN__)
+#if defined(__clang__) && (__clang_major__ >= 13) && !defined(__APPLE_CC__)
 #pragma clang diagnostic ignored "-Wreserved-identifier"
 #endif
 #endif
