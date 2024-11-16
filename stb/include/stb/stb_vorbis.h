@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -25,7 +25,7 @@
 #pragma warning(disable : 4100 4244 4245 4456 4457 4701)
 #endif
 #define STB_VORBIS_HEADER_ONLY
-#include <stb_vorbis.c>
+#include "stb/stb_vorbis.c"
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
