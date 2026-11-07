@@ -274,7 +274,7 @@ static const char *mbedtls_high_level_strerr(int error_code)
         case -(MBEDTLS_ERR_PKCS5_INVALID_FORMAT):
             return( "PKCS5 - Unexpected ASN.1 data" );
         case -(MBEDTLS_ERR_PKCS5_FEATURE_UNAVAILABLE):
-            return( "PKCS5 - Requested encryption or digest alg not available" );
+            return( "PKCS5 - Requested KDF or digest alg not available" );
         case -(MBEDTLS_ERR_PKCS5_PASSWORD_MISMATCH):
             return( "PKCS5 - Given private key password does not allow for correct decryption" );
 #endif /* MBEDTLS_PKCS5_C */
